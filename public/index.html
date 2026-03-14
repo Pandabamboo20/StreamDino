@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamDino</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEmElEQVR42uVXS28TVxQ+37kzYyd+JAQnQAKhoapQC0KlD6RK7aKb/uQuKnXRRdWqAgEtFVQ8FAIJCXkYO3HszJ17vi7GTibBkIdSseidheWr+/jOd77zuKjXxykfcKh84BEV/5wdv/pkauLGis92VJDP9X8EIpJTRVGN+GThxy9D2CmJgCLESQFg4IKZqW/ux0kldSgF0gD0PYP+2aSoJiYiklmqDKlbbf412+muTgEgeTIQuwyUyxNdQEkLEBVh33YQJAXOxdbuLNSFIvXqbFuj0Uy1nJ6aBkivtAAitwTMv5wECqDc6qxMbPdWzwCOIaROaHp6GiD2HP62p5jZjrsw+dU8oJKFrnOahNMVIU1Eo12pCQQiFBmwQNCQKSgH9XlKAFxEiAhEC3khZ4UsTDFXPQDyNAF4vx07jULB/N0IUE2CkP9tHnjx6pcvhsV0Etfal6e//9uYKqikiFAoSkIFzPccMeb7a1m4IyoKTYRI4trm9NStR2ZBAVA1ompkxoAiCwAY6KMcsNpRkhGHrIkOTphl2tvZGDULfTEQtEWtVy6+URebiAFUMTPUKjOrIpRO9/W5ozBQHZ1eIolO99WFIQBydFnoVpbX7l47uLkyOnVbJbYBW6TXsdrldhSN+tRvV0jvspCWi2cVqaeITJ75bDEz74oAhiYSQA1QO+jB/f5Wet9zSVxNr1z64X5j4trT/GJi/14QgIkQPvQiC6kbWgv2A8hz+9nxq0/GKpc3TAzOJSYUvkNdYuYdBGy2n04220/n8jP22Lh4/tu7I6WJXqe7XFl6/ceNQ8pxbmmS1LtJUvdZ1o0OhiFR+ISARuaikaxenV2fnLjxaLCqlIy1pqdu/VmKa2kOynDkfsDM6+b2UuXlyq83zbwC7xd6FnouiWv+TG2uGce1duTK3dGRxvpY7UqbYgP38r1RkBemvMisrN27BgEVasYAd1icQyXQq9Dk0rnvHuZpHZKmb2KhCpmzdayOiEKQhLokAI4iNrRiSkGiEMfdmiIUESXFxGliilJ2/JYMIq32s4bPtiJobEJK8eJ9BbUwPwAqIuJc2dqd5/XNzovGoS4YNjZajz+O4+pOPa62jlUGQRhNJPP6ev3BlSx0KycCAAEjLXuniYVsxwFSoH641UIKEBsQ9NniT18Dg6S0t+ZILiAJgchq88HcevPR2VJpPBXBbihK4dKBLkiTOBoNqW+XllZ+/wR5WX9LhEdmgBRJ/Wa9tfVcoqiUlcuNTt48goAjxSuBPhuG2JVsu7tWbm8tNHo7GxN4R9U8Rk+XSyz1m/VXq3eu07yL3UgGQHzoxM6VggiYEwAJFrDR/memtTU/C6jxHdUyOl77kIPQvFZwu7s20u4sNDa3XsxMNT5/WIrrvTiuegupm1/6+aYxiwC197XsJ+hqCdIUEluz9fhCa3N+lkIsr965nvp2OXKJkba7Lk9qpwqgn5xgoi7OBo0MoLaydu/Tl8u/zTlXMqPpSLmxNlb9aKEycn75SE+zw8KQQpST8eZ4fW7JIbE969RI02rl4mK9cmkt0AMiooiyyCWeDDj0afa/fR3/C/fZk/nyfCCMAAAAAElFTkSuQmCC">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e10;--s1:#161618;--s2:#1e1e22;--s3:#2a2a30;
+  --bd:rgba(255,255,255,0.07);--bhi:rgba(255,255,255,0.13);
+  --t1:#e8e8ec;--t2:#9898a8;--t3:#5a5a6a;
+  --pr:#7c6af7;--prlo:rgba(124,106,247,0.12);
+  --li:#22c55e;--dl:#ef4444;
+  --rsm:6px;--rmd:12px;--rlg:18px;
+}
+html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--t1);overflow:hidden}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+#app{position:relative;z-index:1;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.screen{display:none;width:100%;height:100%;align-items:center;justify-content:center}
+.screen.on{display:flex}
+
+/* CARD */
+.card{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--rlg);
+  padding:48px 56px;display:flex;flex-direction:column;align-items:center;gap:26px;
+  box-shadow:0 24px 64px rgba(0,0,0,0.65);min-width:380px;max-width:430px;
+  animation:fup .45s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes fup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.logo{font-family:'Syne',sans-serif;font-size:2.3rem;font-weight:800;letter-spacing:-.05em}
+
+/* INPUTS */
+.fg{display:flex;flex-direction:column;gap:7px;width:100%}
+.fl{font-size:.72rem;color:var(--t3);letter-spacing:.05em;text-transform:uppercase}
+input[type=text],input[type=password]{
+  width:100%;padding:.65rem 1rem;background:var(--s2);
+  border:1px solid var(--bhi);border-radius:var(--rsm);
+  color:var(--t1);font-family:'IBM Plex Sans',sans-serif;font-size:.875rem;
+  outline:none;transition:border-color .15s;
+}
+input:focus{border-color:var(--pr)}
+input::placeholder{color:var(--t3)}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:.58rem 1.2rem;border-radius:var(--rsm);
+  font-family:'IBM Plex Sans',sans-serif;font-size:.8rem;font-weight:600;
+  cursor:pointer;border:none;transition:all .15s ease;letter-spacing:.01em;width:100%;
+}
+.btn:active{transform:scale(.97)}
+
+/* Primary — subtle dark with border, NOT a big purple blob */
+.bp{
+  background:#1e1e24;
+  color:var(--t1);
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+.bp::before{display:none}
+.bp:hover{
+  background:#28282f;
+  border-color:rgba(255,255,255,0.16);
+  transform:translateY(-1px);
+}
+
+/* Ghost */
+.bg{
+  background:transparent;color:var(--t3);
+  border:1px solid rgba(255,255,255,0.07);
+  font-size:.75rem;
+}
+.bg:hover{background:rgba(255,255,255,0.04);color:var(--t2);border-color:rgba(255,255,255,0.1)}
+
+.err{font-size:.78rem;color:var(--dl);text-align:center;min-height:1em}
+
+/* VIEWER */
+.vcard{
+  background:var(--s1);border:1px solid var(--bd);border-radius:var(--rlg);
+  padding:40px 48px;display:flex;flex-direction:column;align-items:center;gap:22px;
+  min-width:360px;max-width:460px;box-shadow:0 24px 64px rgba(0,0,0,.6);
+  animation:fup .45s cubic-bezier(.16,1,.3,1) both;
+}
+.uzone{
+  width:100%;border:2px dashed var(--bhi);border-radius:var(--rmd);
+  padding:40px 20px;display:flex;flex-direction:column;align-items:center;gap:13px;
+  cursor:pointer;transition:all .2s;background:var(--s2);
+}
+.uzone:hover,.uzone.over{border-color:var(--pr);background:var(--prlo)}
+.uzone svg{color:var(--t3)}
+.uz-main{font-size:.875rem;color:var(--t2);text-align:center;line-height:1.5}
+.uz-sub{font-size:.74rem;color:var(--t3)}
+.pw{width:100%;height:3px;background:var(--s3);border-radius:999px;overflow:hidden;display:none}
+.pw.on{display:block}
+.pf{height:100%;background:var(--pr);border-radius:999px;width:0%;transition:width .3s}
+.vst{font-size:.8rem;padding:10px 14px;border-radius:var(--rsm);text-align:center;display:none}
+.vst.on{display:block}
+.vst.ok{color:var(--li);background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}
+.vst.bad{color:var(--dl);background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2)}
+
+/* STREAMER ROOT */
+#screen-streamer{align-items:center;justify-content:center}
+.sroot{
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;width:100%;height:100%;padding:24px 80px 20px;position:relative;
+}
+
+/* VIDEO BOX WRAPPER — gives room for side buttons */
+.vbox-outer{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  flex:1;width:100%;
+}
+
+/* THE VIDEO BOX */
+#vbox{
+  position:relative;background:#000;
+  border-radius:var(--rlg);overflow:hidden;
+  border:1px solid var(--bd);
+  box-shadow:0 20px 60px rgba(0,0,0,.65);
+  transition:width .38s cubic-bezier(.16,1,.3,1),height .38s cubic-bezier(.16,1,.3,1);
+}
+#vbox video{width:100%;height:100%;display:block;object-fit:contain;background:#000}
+
+/* PLAY BUTTON — centered inside vbox, always */
+#pbtn{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:10;width:72px;height:72px;border-radius:50%;
+  background:#111114;
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 4px 24px rgba(0,0,0,0.7);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+}
+#pbtn:hover{
+  transform:translate(-50%,-50%) scale(1.1);
+  background:#1a1a20;
+  border-color:rgba(255,255,255,0.2);
+}
+#pbtn svg{margin-left:4px}
+#pbtn.h{display:none}
+
+/* EMPTY STATE */
+#emptyst{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;
+  background:rgba(0,0,0,.88);border-radius:var(--rlg);z-index:10;
+}
+#emptyst.h{display:none}
+#emptyst .big{
+  font-family:'Syne',sans-serif;font-size:2rem;font-weight:700;
+  color:var(--t2);letter-spacing:-.03em;text-align:center;line-height:1.45;
+}
+#emptyst .cd{font-size:.75rem;color:var(--t3)}
+
+/* RES ANIM */
+#resanim{
+  position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+  background:#000;opacity:0;pointer-events:none;transition:opacity .22s;border-radius:var(--rlg);
+}
+#resanim.on{opacity:1;pointer-events:all}
+#resanim span{font-size:.7rem;color:var(--t3);letter-spacing:.1em;text-transform:uppercase}
+
+/* MOD DELETE — positioned via JS just above vbox */
+#mddel{
+  display:none;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:15;
+  white-space:nowrap;
+  padding:5px 16px;background:rgba(239,68,68,.13);border:1px solid rgba(239,68,68,.3);
+  color:var(--dl);border-radius:999px;font-size:.74rem;font-weight:600;
+  cursor:pointer;font-family:'IBM Plex Sans',sans-serif;transition:background .15s;
+}
+#mddel:hover{background:rgba(239,68,68,.26)}
+#mddel.on{display:block}
+
+/* SWIPE INDICATOR */
+#swpind{position:absolute;inset:0;border-radius:var(--rlg);pointer-events:none;z-index:5;opacity:0;transition:opacity .15s}
+#swpind.left{background:rgba(239,68,68,.15);opacity:1}
+#swpind.right{background:rgba(34,197,94,.15);opacity:1}
+
+/* VOTE ARROWS — at bottom edge of vbox, left side = dislike, right side = like, outside the box */
+.sarrow{
+  position:absolute;bottom:0;
+  width:48px;height:48px;border-radius:50%;
+  background:#111114;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 2px 8px rgba(0,0,0,.5);
+  cursor:pointer;transition:all .18s;color:var(--t3);z-index:12;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;
+}
+.sarrow:hover{background:#1a1a1e;border-color:rgba(255,255,255,0.16);color:var(--t2)}
+#dislike-btn{left:calc(100% + 16px)}
+#like-btn   {right:calc(100% + 16px)}
+.sarrow.la{border-color:rgba(34,197,94,0.35);color:var(--li);background:#0f1a12}
+.sarrow.da{border-color:rgba(239,68,68,0.35);color:var(--dl);background:#1a0f0f}
+.scnt{font-size:.65rem;line-height:1;color:inherit}
+
+/* SWIPE HINT */
+#swphint{
+  position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+  font-size:.7rem;color:var(--t3);letter-spacing:.04em;text-transform:uppercase;
+  white-space:nowrap;display:none;
+}
+
+/* CHAT COUNTS */
+#ccrow{
+  position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+  display:none;align-items:center;gap:18px;font-size:.75rem;
+}
+#ccrow.on{display:flex}
+.ccd{color:var(--dl);font-weight:600}
+.ccu{color:var(--li);font-weight:600}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--pr);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.55)}}
+
+/* CONTROLS — spread to extremes */
+.ctrl{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:16px 0 0;
+}
+.tog{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px 5px 8px;border-radius:6px;
+  font-family:'IBM Plex Sans',sans-serif;font-size:.72rem;font-weight:500;
+  cursor:pointer;letter-spacing:.01em;
+  background:#18181c;
+  border:1px solid rgba(255,255,255,0.08);
+  color:var(--t3);
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
+  transition:all .15s;
+}
+.tog::before{display:none}
+.tog:hover{background:#222228;border-color:rgba(255,255,255,0.13);color:var(--t2)}
+.tog.on{
+  background:#1a1a22;
+  border-color:rgba(124,106,247,0.3);
+  color:var(--pr);
+  box-shadow:0 0 8px rgba(124,106,247,0.1);
+}
+
+/* Toggle pill indicator */
+.tpill{
+  width:26px;height:14px;border-radius:999px;
+  background:#111114;
+  border:1px solid rgba(255,255,255,0.1);
+  position:relative;flex-shrink:0;
+  transition:all .2s;
+}
+.tpill::after{
+  content:'';position:absolute;
+  top:2px;left:2px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--t3);
+  transition:all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.tog.on .tpill{
+  background:rgba(124,106,247,0.2);
+  border-color:rgba(124,106,247,0.4);
+}
+.tog.on .tpill::after{
+  background:var(--pr);
+  left:calc(100% - 10px);
+  box-shadow:0 0 6px rgba(124,106,247,0.6);
+}
+.qlabel{font-size:.72rem;color:var(--t3);letter-spacing:.02em}
+
+/* BACK */
+#back{
+  position:fixed;top:18px;left:18px;z-index:100;display:none;
+  padding:6px 14px;font-size:.76rem;width:auto;
+}
+#back.on{display:inline-flex}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:999px}
+
+
+/* ROOM SCREENS */
+.room-pick { display:flex; flex-direction:column; gap:12px; width:100%; }
+.room-pick-btn {
+  display:flex; align-items:center; justify-content:center;
+  padding:.65rem 1rem; border-radius:var(--rsm);
+  font-family:'IBM Plex Sans',sans-serif; font-size:.85rem; font-weight:600;
+  cursor:pointer; border:1px solid rgba(255,255,255,0.08);
+  background:#1e1e24; color:var(--t1); transition:all .15s; gap:10px;
+}
+.room-pick-btn:hover { background:#28282f; border-color:rgba(255,255,255,0.14); }
+.room-pick-btn.secondary { background:transparent; color:var(--t2); font-weight:400; font-size:.8rem; }
+.room-pick-btn.secondary:hover { background:rgba(255,255,255,0.04); color:var(--t1); }
+.back-link {
+  font-size:.75rem; color:var(--t3); cursor:pointer;
+  text-align:center; text-decoration:underline; text-underline-offset:3px;
+}
+.back-link:hover { color:var(--t2); }
+.room-url {
+  font-size:.78rem; color:var(--t3); text-align:center;
+  background:var(--s2); border:1px solid var(--bd); border-radius:var(--rsm);
+  padding:8px 12px; word-break:break-all; font-family:'IBM Plex Sans',sans-serif;
+}
+.room-url strong { color:var(--pr); }
+.notice {
+  font-size:.75rem; color:var(--t3); text-align:center; line-height:1.5;
+}
+.pill-status {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:.72rem; color:var(--t3); font-family:'IBM Plex Sans',sans-serif;
+}
+.pill-dot { width:6px; height:6px; border-radius:50%; background:var(--li); animation:pulse 1.5s infinite; }
+
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+<button class="btn bg" id="back" onclick="goHome()">Volver</button>
+<div id="app">
+
+  <!-- LANDING: elegir si crear sala o unirse -->
+  <div class="screen on" id="screen-landing">
+    <div class="card">
+      <div class="logo">StreamDino</div>
+      <div class="room-pick">
+        <button class="room-pick-btn" onclick="show('screen-create')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="8" cy="8" r="7"/><line x1="8" y1="5" x2="8" y2="11"/><line x1="5" y1="8" x2="11" y2="8"/>
+          </svg>
+          Crear sala (streamer)
+        </button>
+        <button class="room-pick-btn" onclick="show('screen-join')">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 8H3M3 8l3-3M3 8l3 3"/><path d="M7 3h6v10H7"/>
+          </svg>
+          Unirme a una sala (viewer)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREAR SALA (streamer) -->
+  <div class="screen" id="screen-create">
+    <div class="card">
+      <div class="logo">Nueva sala</div>
+      <div class="fg">
+        <label class="fl">NOMBRE DE SALA</label>
+        <input type="text" id="cr-room" placeholder="mi-sala (sin espacios)" maxlength="32" autocomplete="off">
+      </div>
+      <div class="fg">
+        <label class="fl">CONTRASEÑA</label>
+        <input type="password" id="cr-pass" placeholder="Mínimo 4 caracteres">
+      </div>
+      <div class="err" id="cr-err"></div>
+      <button class="btn bp" onclick="createRoom()">Crear sala</button>
+      <span class="back-link" onclick="show('screen-landing')">Volver</span>
+    </div>
+  </div>
+
+  <!-- LOGIN STREAMER -->
+  <div class="screen" id="screen-login-str">
+    <div class="card">
+      <div class="logo" id="ls-title">Sala</div>
+      <div class="fg">
+        <label class="fl">CONTRASEÑA</label>
+        <input type="password" id="ls-pass" placeholder="Tu contraseña de streamer">
+      </div>
+      <div class="err" id="ls-err"></div>
+      <button class="btn bp" onclick="loginStreamer()">Entrar como streamer</button>
+      <span class="back-link" onclick="show('screen-landing')">Volver</span>
+    </div>
+  </div>
+
+  <!-- UNIRSE A SALA (viewer) -->
+  <div class="screen" id="screen-join">
+    <div class="card">
+      <div class="logo">Unirse</div>
+      <div class="fg">
+        <label class="fl">NOMBRE DE SALA</label>
+        <input type="text" id="jn-room" placeholder="nombre-de-sala" maxlength="32" autocomplete="off">
+      </div>
+      <div class="err" id="jn-err"></div>
+      <button class="btn bp" onclick="joinRoom()">Entrar como viewer</button>
+      <span class="back-link" onclick="show('screen-landing')">Volver</span>
+    </div>
+  </div>
+
+  <!-- SALA CREADA — mostrar URL -->
+  <div class="screen" id="screen-created">
+    <div class="card">
+      <div class="logo">¡Sala lista!</div>
+      <p class="notice">Comparte este link con tus viewers:</p>
+      <div class="room-url" id="share-url"></div>
+      <button class="btn bp" onclick="enterAsStreamer()">Entrar a mi sala</button>
+    </div>
+  </div>
+
+  <!-- VIEWER -->
+  <div class="screen" id="screen-viewer">
+    <div class="vcard">
+      <div class="logo" id="vw-room-name">Sala</div>
+      <div class="pill-status">
+        <div class="pill-dot"></div>
+        <span id="vw-status">Conectando...</span>
+      </div>
+      <input type="file" id="fi" accept="video/*" style="display:none">
+      <div class="uzone" id="uzone">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M18 24V12M12 18l6-6 6 6"/><rect x="4" y="4" width="28" height="28" rx="4" stroke-dasharray="4 3"/>
+        </svg>
+        <div class="uz-main">Arrastra un video o haz click<br><span style="color:var(--t3);font-size:.8rem">Máximo 3 minutos</span></div>
+      </div>
+      <div class="pw" id="pw"><div class="pf" id="pf"></div></div>
+      <div class="vst" id="vst"></div>
+    </div>
+  </div>
+
+  <!-- STREAMER -->
+  <div class="screen" id="screen-streamer">
+    <div class="sroot">
+      <div class="vbox-outer">
+        <div id="vbox">
+          <video id="vid" playsinline></video>
+          <div id="swpind"></div>
+          <div id="resanim"><span id="restxt">Cargando</span></div>
+          <button id="mddel" onclick="modDelCur()">Eliminar video</button>
+
+          <button id="pbtn" onclick="startPlay()">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="white">
+              <polygon points="8,4 26,15 8,26"/>
+            </svg>
+          </button>
+
+          <div id="emptyst" class="h">
+            <div class="big">No hay mas videos<br>:(</div>
+            <div class="cd" id="cdtxt"></div>
+          </div>
+
+          <div id="swphint">Desliza para banear o salvar</div>
+          <div id="ccrow">
+            <span class="ccd" id="ccd">0</span>
+            <span style="font-size:.68rem;color:var(--t3)">!abajo</span>
+            <div class="dot"></div>
+            <span style="font-size:.68rem;color:var(--t3)">!arriba</span>
+            <span class="ccu" id="ccu">0</span>
+          </div>
+
+          <button class="sarrow" id="dislike-btn" onclick="doVote('dislike')">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="4,7 10,14 16,7"/>
+            </svg>
+            <span class="scnt" id="dcnt">0</span>
+          </button>
+          <button class="sarrow" id="like-btn" onclick="doVote('like')">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="4,13 10,6 16,13"/>
+            </svg>
+            <span class="scnt" id="ucnt">0</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="ctrl">
+        <button class="tog" id="bantog" onclick="toggleBan()">
+          <div class="tpill"></div>Si me rio te baneo
+        </button>
+        <span class="qlabel" id="qlbl">0 videos</span>
+        <button class="tog" id="modtog" onclick="toggleMod()">
+          <div class="tpill"></div>Modo moderador
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+// ── CONFIG ──
+const SERVER = window.location.origin;
+const WS_URL = (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host;
+
+// ── DINO BACKGROUND ──
+const DINO_B64 = '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';
+const TILE_W=100, TILE_H=90, DINO_W=55, DINO_H=57;
+const SPD_X=0.5, SPD_Y=0.42;
+let ptX=0, ptY=0, pat=null;
+const bgc=document.getElementById('bgc');
+const bx=bgc.getContext('2d');
+function rbg(){bgc.width=innerWidth;bgc.height=innerHeight;}
+function buildTile(){
+  const tile=document.createElement('canvas');
+  tile.width=TILE_W; tile.height=TILE_H;
+  const tx=tile.getContext('2d');
+  const img=new Image();
+  img.onload=()=>{
+    tx.save();
+    tx.translate(TILE_W/2,TILE_H/2);
+    tx.rotate(20*Math.PI/180);
+    tx.drawImage(img,-DINO_W/2,-DINO_H/2,DINO_W,DINO_H);
+    tx.restore();
+    pat=bx.createPattern(tile,'repeat');
+    loop();
+  };
+  img.src='data:image/png;base64,'+DINO_B64;
+}
+function loop(){
+  ptX-=SPD_X; ptY-=SPD_Y;
+  if(ptX<=-TILE_W) ptX+=TILE_W;
+  if(ptY<=-TILE_H) ptY+=TILE_H;
+  bx.clearRect(0,0,bgc.width,bgc.height);
+  if(pat){
+    pat.setTransform(new DOMMatrix().translate(ptX,ptY));
+    bx.fillStyle=pat;
+    bx.fillRect(0,0,bgc.width,bgc.height);
+  }
+  requestAnimationFrame(loop);
+}
+rbg(); window.addEventListener('resize',rbg); buildTile();
+
+// ── NAVIGATION ──
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  const showBack = ['screen-streamer','screen-viewer'].includes(id);
+  document.getElementById('back').classList.toggle('on', showBack);
+}
+
+function goHome(){
+  disconnectWS();
+  resetStreamerUI();
+  show('screen-landing');
+}
+
+// ── STATE ──
+let ws = null;
+let currentRoom = null;
+let currentRole = null; // 'streamer' | 'viewer'
+let streamerToken = null;
+
+// Streamer state
+let queue=[], curIdx=-1, curVote=null;
+let banMode=false, modMode=false, chatMode=false;
+let chatU=0, chatD=0, prevAsp=null, playing=false, cdTm=null;
+let betaMode=false;
+
+// Viewer state: pending blobs waiting to be sent
+const pendingBlobs = new Map(); // requestId -> blob
+
+// ── ROOM DETECTION (via URL ?room=xxx) ──
+(function boot(){
+  const params = new URLSearchParams(location.search);
+  const room = params.get('room');
+  if (room) {
+    // Alguien entró con un link directo → es viewer
+    document.getElementById('jn-room').value = room;
+    joinRoom();
+  } else {
+    show('screen-landing');
+  }
+})();
+
+// ── CREATE ROOM ──
+async function createRoom(){
+  const room = document.getElementById('cr-room').value.trim();
+  const pass = document.getElementById('cr-pass').value;
+  const err  = document.getElementById('cr-err');
+  err.textContent = '';
+
+  if (!room || !pass) return (err.textContent = 'Completá los campos');
+
+  try {
+    const res = await fetch('/api/rooms', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ room, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) return (err.textContent = data.error);
+
+    currentRoom = room;
+    // Guardar pass temporalmente para login inmediato
+    window._tmpPass = pass;
+
+    const url = `${location.origin}?room=${room}`;
+    document.getElementById('share-url').innerHTML = url;
+    show('screen-created');
+  } catch(e) {
+    err.textContent = 'Error de conexión';
+  }
+}
+
+// ── ENTER AS STREAMER (after room created) ──
+async function enterAsStreamer(){
+  const room = currentRoom;
+  const pass = window._tmpPass;
+  window._tmpPass = null;
+
+  try {
+    const res = await fetch(`/api/rooms/${room}/auth`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) return;
+    streamerToken = data.token;
+    connectWS('streamer', room, streamerToken);
+  } catch(e) {}
+}
+
+// ── LOGIN STREAMER (desde URL directa con ?room=xxx) ──
+function showStreamerLogin(room){
+  currentRoom = room;
+  document.getElementById('ls-title').textContent = room;
+  show('screen-login-str');
+}
+
+async function loginStreamer(){
+  const pass = document.getElementById('ls-pass').value;
+  const err  = document.getElementById('ls-err');
+  err.textContent = '';
+
+  try {
+    const res = await fetch(`/api/rooms/${currentRoom}/auth`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) return (err.textContent = data.error);
+    streamerToken = data.token;
+    connectWS('streamer', currentRoom, streamerToken);
+  } catch(e) {
+    err.textContent = 'Error de conexión';
+  }
+}
+
+// ── JOIN ROOM (viewer) ──
+async function joinRoom(){
+  const room = document.getElementById('jn-room').value.trim();
+  const err  = document.getElementById('jn-err');
+  err.textContent = '';
+
+  if (!room) return (err.textContent = 'Escribí el nombre de la sala');
+
+  try {
+    const res = await fetch(`/api/rooms/${room}`);
+    const data = await res.json();
+    if (!data.exists) return (err.textContent = 'Sala no encontrada');
+    currentRoom = room;
+    connectWS('viewer', room, null);
+  } catch(e) {
+    err.textContent = 'Error de conexión';
+  }
+}
+
+// ── WEBSOCKET ──
+function connectWS(role, room, token){
+  disconnectWS();
+  currentRole = role;
+  ws = new WebSocket(WS_URL);
+
+  ws.onopen = () => {
+    if (role === 'viewer') {
+      ws.send(JSON.stringify({ type: 'viewer:join', room }));
+    } else {
+      ws.send(JSON.stringify({ type: 'streamer:join', room, token }));
+    }
+  };
+
+  ws.onmessage = (e) => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+    handleWS(msg);
+  };
+
+  ws.onclose = () => {
+    if (currentRole === 'viewer') {
+      setSt('Desconectado del servidor','bad');
+    }
+  };
+
+  ws.onerror = () => {};
+}
+
+function disconnectWS(){
+  if (ws) { ws.close(); ws = null; }
+  currentRole = null;
+}
+
+function wsSend(obj){
+  if (ws && ws.readyState === WebSocket.OPEN)
+    ws.send(JSON.stringify(obj));
+}
+
+// ── WS MESSAGE HANDLER ──
+function handleWS(msg){
+  switch(msg.type){
+
+    // ── VIEWER ──
+    case 'viewer:joined':
+      document.getElementById('vw-room-name').textContent = currentRoom;
+      document.getElementById('vw-status').textContent = 'Conectado ✓';
+      show('screen-viewer');
+      history.replaceState(null,'',`?room=${currentRoom}`);
+      break;
+
+    case 'streamer:offline':
+      setSt('El streamer se desconectó','bad');
+      break;
+
+    case 'viewer:send_blob': {
+      // Streamer pidió el blob para este requestId
+      const blob = pendingBlobs.get(msg.requestId);
+      if (!blob) return;
+      sendBlobChunked(blob, msg.requestId);
+      break;
+    }
+
+    // ── STREAMER ──
+    case 'streamer:joined':
+      show('screen-streamer');
+      sizeBox(16,9);
+      history.replaceState(null,'',`?room=${currentRoom}`);
+      break;
+
+    case 'video:queued':
+      // Viewer mandó metadata de video
+      queue.push({ name: msg.name, duration: msg.duration, viewerId: msg.viewerId, blob: null });
+      updateQL();
+      // Pedir el blob inmediatamente
+      const reqId = 'req_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+      queue[queue.length-1].requestId = reqId;
+      wsSend({ type: 'streamer:request_blob', viewerId: msg.viewerId, requestId: reqId });
+      break;
+
+    case 'blob:chunk':
+      receiveBlobChunk(msg);
+      break;
+
+    case 'vote:received':
+      handleVoteFromViewer(msg.viewerId, msg.vote);
+      break;
+
+    case 'viewer:connected':
+      // Un viewer nuevo entró — no necesitamos hacer nada especial
+      break;
+
+    case 'viewer:disconnected':
+      // Un viewer se fue — limpiar blobs pendientes suyos
+      queue = queue.filter(item => {
+        if (item.viewerId === msg.viewerId && !item.blob) return false;
+        return true;
+      });
+      updateQL();
+      break;
+
+    case 'error':
+      if (msg.code === 'NO_ROOM') goHome();
+      break;
+  }
+}
+
+// ── BLOB TRANSFER (viewer → servidor → streamer) ──
+const CHUNK_SIZE = 32 * 1024; // 32KB por chunk
+
+async function sendBlobChunked(blob, requestId){
+  const buf = await blob.arrayBuffer();
+  const arr = new Uint8Array(buf);
+  const total = Math.ceil(arr.length / CHUNK_SIZE);
+
+  for (let i = 0; i < total; i++) {
+    const slice = arr.slice(i * CHUNK_SIZE, (i+1) * CHUNK_SIZE);
+    const b64 = btoa(String.fromCharCode(...slice));
+    wsSend({ type: 'viewer:blob_chunk', requestId, chunk: b64, index: i, total });
+    // Pequeña pausa para no saturar el WS
+    if (i % 10 === 9) await new Promise(r => setTimeout(r, 10));
+  }
+}
+
+// Streamer recibe chunks y reconstruye el blob
+const receivingBlobs = new Map(); // requestId -> { chunks[], total, mime }
+
+function receiveBlobChunk(msg){
+  if (!receivingBlobs.has(msg.requestId)) {
+    receivingBlobs.set(msg.requestId, { chunks: new Array(msg.total), received: 0, total: msg.total });
+  }
+  const rb = receivingBlobs.get(msg.requestId);
+  rb.chunks[msg.index] = msg.chunk;
+  rb.received++;
+
+  if (rb.received === rb.total) {
+    // Reconstruir blob
+    const bytes = rb.chunks.map(b64 => {
+      const bin = atob(b64);
+      return new Uint8Array(bin.length).map((_,i) => bin.charCodeAt(i));
+    });
+    const blob = new Blob(bytes, { type: 'video/mp4' });
+    const url = URL.createObjectURL(blob);
+    receivingBlobs.delete(msg.requestId);
+
+    // Asignar el blob al video de la cola que tiene este requestId
+    const item = queue.find(q => q.requestId === msg.requestId);
+    if (item) {
+      item.blob = url;
+      item.ready = true;
+      // Si es el primero y no estamos reproduciendo, arrancar
+      if (!playing && queue.length === 1) startPlay();
+    }
+  }
+}
+
+// ── VIEWER UPLOAD ──
+const uz=document.getElementById('uzone');
+const fi=document.getElementById('fi');
+uz.addEventListener('click',()=>fi.click());
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('over')});
+uz.addEventListener('dragleave',()=>uz.classList.remove('over'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('over');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0])});
+fi.addEventListener('change',()=>{if(fi.files[0])handleFile(fi.files[0]);fi.value=''});
+
+function setSt(msg,type){const v=document.getElementById('vst');v.textContent=msg;v.className='vst on '+type;}
+
+function handleFile(file){
+  if(!file.type.startsWith('video/')) return setSt('Solo archivos de video','bad');
+  const pw=document.getElementById('pw');
+  const pf=document.getElementById('pf');
+  pw.classList.add('on'); pf.style.width='0%';
+
+  const url=URL.createObjectURL(file);
+  const t=document.createElement('video');
+  t.src=url;
+  t.onloadedmetadata=()=>{
+    if(t.duration>180){
+      setSt('Video demasiado largo (máx 3 min)','bad');
+      URL.revokeObjectURL(url);
+      pw.classList.remove('on');
+      return;
+    }
+    // Guardar blob localmente para enviarlo cuando lo pidan
+    const reqId='v_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    pendingBlobs.set(reqId, file);
+
+    // Mandar metadata al servidor
+    wsSend({
+      type: 'viewer:video',
+      name: file.name,
+      duration: t.duration,
+    });
+
+    pf.style.width='100%';
+    setSt('Video enviado ✓','ok');
+    setTimeout(()=>{pw.classList.remove('on');pf.style.width='0%'},1800);
+    URL.revokeObjectURL(url);
+  };
+  t.onerror=()=>{setSt('Error al leer el archivo','bad');URL.revokeObjectURL(url);pw.classList.remove('on')};
+}
+
+// ── PLAY ──
+function startPlay(){
+  if(queue.length===0){showEmpty();return}
+  document.getElementById('pbtn').classList.add('h');
+  curIdx=-1; playing=true;
+  nextVid();
+}
+
+function nextVid(){
+  if(curIdx+1>=queue.length){showEmpty();return}
+  curIdx++;
+  updateQL(); resetVotes(); chatU=0; chatD=0; updateCC();
+  const item=queue[curIdx];
+
+  const tryPlay = () => {
+    if (!item.ready) {
+      // Blob todavía no llegó, esperar
+      setTimeout(tryPlay, 200);
+      return;
+    }
+    const vid=document.getElementById('vid');
+    const ra=document.getElementById('resanim');
+    const rt=document.getElementById('restxt');
+
+    const load=()=>{
+      vid.src=item.blob; vid.load();
+      vid.oncanplay=()=>{
+        const nw=vid.videoWidth||16, nh=vid.videoHeight||9;
+        const prevAspCat = prevAsp ? (prevAsp > 1 ? 'l' : 'p') : null;
+        const newAspCat  = (nw/nh) > 1 ? 'l' : 'p';
+        const dirChg = prevAspCat && prevAspCat !== newAspCat;
+        prevAsp=nw/nh;
+        const finish=()=>{sizeBox(nw,nh);setTimeout(()=>{ra.classList.remove('on');vid.play()},dirChg?280:0)};
+        if(dirChg){ra.classList.add('on');rt.textContent='Cargando';setTimeout(finish,220)}
+        else{sizeBox(nw,nh);ra.classList.remove('on');vid.play()}
+      };
+      vid.onended=nextVid;
+    };
+    load();
+  };
+  tryPlay();
+}
+
+function showEmpty(){
+  playing=false;
+  const es=document.getElementById('emptyst');
+  es.classList.remove('h');
+  document.getElementById('pbtn').classList.remove('h');
+  let s=60;
+  const ct=document.getElementById('cdtxt');
+  const tick=()=>{ct.textContent=`Volviendo al inicio en ${s}s`;if(--s<0){clearInterval(cdTm);goHome()}}
+  tick(); cdTm=setInterval(tick,1000);
+}
+
+function sizeBox(w,h){
+  const b=document.getElementById('vbox');
+  const ratio=w/h;
+  const maxH=innerHeight*0.74;
+  const maxW=innerWidth*0.74;
+  let bw=maxW,bh=maxW/ratio;
+  if(bh>maxH){bh=maxH;bw=bh*ratio}
+  b.style.width=Math.round(bw)+'px';
+  b.style.height=Math.round(bh)+'px';
+  const outer=b.parentElement;
+  const outerH=outer.getBoundingClientRect().height;
+  const md=document.getElementById('mddel');
+  const mdH=md.getBoundingClientRect().height||26;
+  md.style.top=Math.round((outerH-bh)/2 - mdH - 8)+'px';
+  md.style.left='50%';
+}
+
+// ── VOTES ──
+function resetVotes(){
+  curVote=null;
+  document.getElementById('like-btn').classList.remove('la');
+  document.getElementById('dislike-btn').classList.remove('da');
+  document.getElementById('ucnt').textContent='0';
+  document.getElementById('dcnt').textContent='0';
+}
+
+function doVote(v){
+  if(banMode)return;
+  wsSend({type:'viewer:vote',vote:v});
+}
+
+function handleVoteFromViewer(viewerId, vote){
+  if(vote==='like'){chatU++;document.getElementById('ucnt').textContent=chatU;document.getElementById('like-btn').classList.add('la')}
+  else{chatD++;document.getElementById('dcnt').textContent=chatD;document.getElementById('dislike-btn').classList.add('da')}
+}
+
+// ── BAN MODE ──
+let swpX=0, swpY=0;
+function toggleBan(){
+  banMode=!banMode;
+  document.getElementById('bantog').classList.toggle('on',banMode);
+  document.getElementById('swphint').style.display=banMode?'block':'none';
+  document.getElementById('dislike-btn').style.display=banMode?'none':'';
+  document.getElementById('like-btn').style.display=banMode?'none':'';
+  const vb=document.getElementById('vbox');
+  if(banMode){
+    vb.addEventListener('mousedown',swpStart);
+    vb.addEventListener('touchstart',swpStartT,{passive:true});
+  }else{
+    vb.removeEventListener('mousedown',swpStart);
+    vb.removeEventListener('touchstart',swpStartT);
+    document.getElementById('swpind').className='';
+  }
+}
+function swpStart(e){swpX=e.clientX;swpY=e.clientY;document.addEventListener('mousemove',swpMove);document.addEventListener('mouseup',swpEnd)}
+function swpStartT(e){swpX=e.touches[0].clientX;swpY=e.touches[0].clientY;document.addEventListener('touchmove',swpMoveT,{passive:true});document.addEventListener('touchend',swpEndT)}
+function swpMove(e){const dx=e.clientX-swpX;document.getElementById('swpind').className=dx<-30?'left':dx>30?'right':''}
+function swpMoveT(e){const dx=e.touches[0].clientX-swpX;document.getElementById('swpind').className=dx<-30?'left':dx>30?'right':''}
+function swpEnd(e){
+  document.removeEventListener('mousemove',swpMove);document.removeEventListener('mouseup',swpEnd);
+  const dx=e.clientX-swpX;
+  if(dx<0){if(curIdx>=0&&curIdx<queue.length){queue.splice(curIdx,1);curIdx--;}nextVid()}
+  else if(dx>30)nextVid();
+  document.getElementById('swpind').className='';
+}
+function swpEndT(e){
+  document.removeEventListener('touchmove',swpMoveT);document.removeEventListener('touchend',swpEndT);
+  const dx=e.changedTouches[0].clientX-swpX;
+  if(dx<0){if(curIdx>=0&&curIdx<queue.length){queue.splice(curIdx,1);curIdx--;}nextVid()}
+  else if(dx>30)nextVid();
+  document.getElementById('swpind').className='';
+}
+
+// ── MOD MODE ──
+function toggleMod(){
+  modMode=!modMode;
+  document.getElementById('modtog').classList.toggle('on',modMode);
+  document.getElementById('mddel').classList.toggle('on',modMode);
+}
+function modDelCur(){
+  if(curIdx<0||curIdx>=queue.length)return;
+  queue.splice(curIdx,1);curIdx--;nextVid();
+}
+
+// ── CHAT MODE ──
+function updateCC(){document.getElementById('ccu').textContent=chatU;document.getElementById('ccd').textContent=chatD}
+
+// ── RESET STREAMER UI ──
+function resetStreamerUI(){
+  queue=[]; curIdx=-1; curVote=null;
+  banMode=false; modMode=false; chatMode=false; chatU=0; chatD=0; prevAsp=null;
+  playing=false;
+  if(cdTm)clearInterval(cdTm);
+  document.getElementById('bantog').classList.remove('on');
+  document.getElementById('modtog').classList.remove('on');
+  document.getElementById('mddel').classList.remove('on');
+  document.getElementById('pbtn').classList.remove('h');
+  const es=document.getElementById('emptyst'); if(es) es.classList.add('h');
+  document.getElementById('ccrow').classList.remove('on');
+  document.getElementById('swphint').style.display='none';
+  document.getElementById('dislike-btn').style.display='';
+  document.getElementById('like-btn').style.display='';
+  resetVotes();
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown',e=>{
+  if(!e.ctrlKey)return;
+  if(e.key==='q'){
+    e.preventDefault();
+    chatMode=!chatMode;
+    document.getElementById('ccrow').classList.toggle('on',chatMode);
+    if(!chatMode){chatU=0;chatD=0;updateCC();}
+  }
+  if(e.key==='b'){
+    e.preventDefault();
+    betaMode=!betaMode;
+  }
+});
+
+// ── UTILS ──
+function updateQL(){const r=Math.max(queue.length-(curIdx+1),0);document.getElementById('qlbl').textContent=r+' video'+(r!==1?'s':'')}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+</script>
+</body>
+</html>
